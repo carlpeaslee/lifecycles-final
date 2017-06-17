@@ -1,7 +1,10 @@
 import React, { Component } from 'react'
-import styled from 'styled-components'
+// import styled from 'styled-components'
+import loggify from './loggify'
 
 class App extends Component {
+
+  static displayName = "App"
 
 
   render() {
@@ -13,5 +16,7 @@ class App extends Component {
   }
 }
 
+
+App = loggify(App)
 
 export default App
