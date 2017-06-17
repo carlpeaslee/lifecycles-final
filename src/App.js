@@ -1,17 +1,23 @@
 import React, { Component } from 'react'
+import styled from 'styled-components'
 
 class App extends Component {
+
+  static displayName = "MyApp"
 
   render() {
     return (
       <div>
-        <h2>Hello</h2>
+        <FancyH2>Hello</FancyH2>
       </div>
     )
   }
 }
 
+const FancyH2 = styled.h2`
+  color: green;
+`
 
-
+FancyH2.displayName = "FancyH2"
 
 export default App
