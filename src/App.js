@@ -5,7 +5,12 @@ class App extends Component {
 
   static displayName = "MyApp"
 
+  static defaultProps = {
+    owner: "Carl"
+  }
+
   render() {
+    console.log(this.props)
     return (
       <div>
         <FancyH2>Hello</FancyH2>
