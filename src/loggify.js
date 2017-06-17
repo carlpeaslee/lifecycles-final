@@ -6,7 +6,8 @@ function loggify(Wrapped){
   const methodsToLog = [
     "componentWillMount",
     "componentDidMount",
-    "componentWillUnmount"
+    "componentWillUnmount",
+    "componentWillReceiveProps"
   ]
 
   let originals = {}
@@ -24,6 +25,10 @@ function loggify(Wrapped){
 
       console.groupCollapsed(`${Wrapped.displayName} called ${method}`)
 
+        if (method === 'componentWillReceiveProps') {
+          console.log("nextProps", args[0])
+        }
+
       console.groupEnd()
 
       if (original) {
@@ -35,8 +40,8 @@ function loggify(Wrapped){
 
     Wrapped.prototype.setState = function (partialState, callback) {
       console.groupCollapsed(`${Wrapped.displayName} setState`)
-      console.log('partialState', partialState)
-      console.log('callback', callback)
+      console.log("partialState", partialState)
+      console.log("callback" , callback)
       console.groupEnd()
       this.updater.enqueueSetState(this, partialState, callback, 'setState')
     }

@@ -7,6 +7,7 @@ class App extends Component {
   static displayName = "App"
 
   state = {
+    showPollChild: true,
   }
 
   fetchData = () => {
@@ -55,7 +56,11 @@ class App extends Component {
         >
           {(showPollChild) ? "Hide" : "Show"} PollChild
         </button>
-        {(showPollChild) ? <PollChild/> : null}
+        {(showPollChild) ? (
+          <PollChild
+            data={data}
+          />
+        ) : null}
       </div>
     )
   }
@@ -97,7 +102,10 @@ class PollChild extends Component {
 
   render() {
     return (
-      <h4>poll: {this.state.poll}</h4>
+      <div>
+        <h4>poll: {this.state.poll}</h4>
+        <h4>data: {this.props.data}</h4>
+      </div>
     )
   }
 }
