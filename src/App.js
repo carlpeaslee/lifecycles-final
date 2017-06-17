@@ -38,7 +38,8 @@ class App extends Component {
   componentDidMount(){
     this.fetchData()
     this.parentPoll()
-    const canvasCtx = this.refs.appCanvas.getContext('2d')
+    this.canvasCtx = this.refs.appCanvas.getContext('2d')
+    let {canvasCtx} = this
     canvasCtx.fillStyle = "blue"
     canvasCtx.arc(75, 75, 50, 0, 2 * Math.PI)
     canvasCtx.fill()
@@ -46,6 +47,23 @@ class App extends Component {
 
   componentWillUnmount() {
     clearInterval(this.pollInterval)
+  }
+
+
+  componentWillUpdate(nextProps, nextState){
+    if (nextState.parentPoll !== this.state.parentPoll) {
+      this.canvasCtx.clearRect(0,0,200,200)
+    }
+  }
+
+
+  componentDidUpdate(prevProps, prevState){
+    if (prevState.parentPoll !== this.state.parentPoll) {
+      let {canvasCtx} = this
+      canvasCtx.fillStyle = (prevState.parentPoll % 2 === 1) ? "green" : "red"
+      canvasCtx.arc(75, 75, 50, 0, 2 * Math.PI)
+      canvasCtx.fill()
+    }
   }
 
   render() {

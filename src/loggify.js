@@ -8,7 +8,8 @@ function loggify(Wrapped){
     "componentDidMount",
     "componentWillUnmount",
     "componentWillReceiveProps",
-    "shouldComponentUpdate"
+    "shouldComponentUpdate",
+    "componentWillUpdate"
   ]
 
   let originals = {}
@@ -26,16 +27,18 @@ function loggify(Wrapped){
 
       console.groupCollapsed(`${Wrapped.displayName} called ${method}`)
 
-        if (method === 'componentWillReceiveProps' ||
-                       'shouldComponentUpdate'
+      if (method === "componentWillReceiveProps" ||
+                     "shouldComponentUpdate" ||
+                     "componentWillUpdate"
       ) {
-          console.log("nextProps", args[0])
-        }
+        console.log("nextProps", args[0])
+      }
 
-        if (method === 'shouldComponentUpdate') {
-          console.log("nextState", args[1])
-
-        }
+      if (method === "shouldComponentUpdate" ||
+                     "componentWillUpdate"
+      ) {
+        console.log("nextState", args[1])
+      }
 
       console.groupEnd()
 
@@ -49,7 +52,6 @@ function loggify(Wrapped){
       ) {
         return true
       }
-
     }
 
     Wrapped.prototype.setState = function (partialState, callback) {
