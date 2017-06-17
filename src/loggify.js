@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import styled from 'styled-components'
+import {LoggerContainer, H2} from './styled'
 
 function loggify(Wrapped){
 
@@ -9,7 +9,8 @@ function loggify(Wrapped){
     "componentWillUnmount",
     "componentWillReceiveProps",
     "shouldComponentUpdate",
-    "componentWillUpdate"
+    "componentWillUpdate",
+    "componentDidUpdate"
   ]
 
   let originals = {}
@@ -38,6 +39,13 @@ function loggify(Wrapped){
                      "componentWillUpdate"
       ) {
         console.log("nextState", args[1])
+      }
+
+      if (method === "componentDidUpdate"
+      ) {
+        console.log("prevState", args[0])
+
+        console.log("prevProps", args[1])
       }
 
       console.groupEnd()
@@ -90,18 +98,5 @@ function loggify(Wrapped){
   }
 }
 
-const LoggerContainer = styled.div`
-  background-color: aliceblue;
-  border: 2px grooved aquamarine;
-  border-radius: 5px;
-`
-
-LoggerContainer.displayName = "LoggerContainer"
-
-const H2 = styled.h2`
-  color: blueviolet
-`
-
-H2.displayName = "H2"
 
 export default loggify

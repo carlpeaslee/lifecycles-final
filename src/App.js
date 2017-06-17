@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
-// import styled from 'styled-components'
+import {start, stop, printWasted, printInclusive, printExclusive} from 'react-addons-perf'
 import loggify from './loggify'
+import uuid from 'uuid/v4'
+import {Parent, Column, Row, ChildContainer, H4, H5, Id, Value, Item, NoKey, Medium, Faster} from './styled'
 
 class App extends Component {
 
@@ -69,33 +71,38 @@ class App extends Component {
   render() {
     let {data, showPollChild, parentPoll} = this.state
     return (
-      <div>
-        <h2>hello</h2>
-        <h4>data: {data}</h4>
-        <h4>parentPoll: {parentPoll}</h4>
-        <canvas
-          ref="appCanvas"
-          height={200}
-          width={200}
-        />
-        <button
-          onClick={()=>{
-            this.setState((prevState) => {
-              return {
-                showPollChild: !prevState.showPollChild
-              }
-            })
-          }}
-        >
-          {(showPollChild) ? "Hide" : "Show"} PollChild
-        </button>
-        {(showPollChild) ? (
-          <PollChild
-            data={data}
-            parentPoll={parentPoll}
+      <Parent>
+        <Column>
+          <H4>data: {data}</H4>
+          <H4>parentPoll: {parentPoll}</H4>
+          <canvas
+            ref="appCanvas"
+            height={200}
+            width={200}
           />
-        ) : null}
-      </div>
+          <button
+            onClick={()=>{
+              this.setState((prevState) => {
+                return {
+                  showPollChild: !prevState.showPollChild
+                }
+              })
+            }}
+          >
+            {(showPollChild) ? "Hide" : "Show"} PollChild
+          </button>
+          {(showPollChild) ? (
+            <PollChild
+              data={data}
+              parentPoll={parentPoll}
+            />
+          ) : null}
+        </Column>
+        <Column>
+          <BigList/>
+
+        </Column>
+      </Parent>
     )
   }
 }
@@ -140,13 +147,12 @@ class PollChild extends Component {
   render() {
     let {data, parentPoll} = this.props
     let {poll} = this.state
-    console.log("PollChild rendered!")
     return (
-      <div>
-        <h4>poll: {poll}</h4>
-        <h4>data: {data}</h4>
-        <h4>parentPoll: {parentPoll}</h4>
-      </div>
+      <ChildContainer>
+        <H5>poll: {poll}</H5>
+        <H5>data: {data}</H5>
+        <H5>parentPoll: {parentPoll}</H5>
+      </ChildContainer>
     )
   }
 }
@@ -158,8 +164,137 @@ function getRandomInt(min, max) {
 }
 
 
-App = loggify(App)
 
-PollChild = loggify(PollChild)
+class BigList extends Component {
+
+  static displayName = "BigList"
+
+
+  constructor(props) {
+    super(props)
+
+    this.ids = []
+
+    for (let i = 0; i < 500; i++) {
+      this.ids.push(uuid())
+    }
+
+
+    this.state = {
+      items: this.ids.map((id)=>{
+        return {
+         id,
+         value: getRandomInt(1,5)
+        }
+      })
+    }
+  }
+
+  updateList = () => {
+    let newItems = this.ids.map((id)=>{
+      return {
+       id,
+       value: getRandomInt(1,5)
+      }
+    })
+    start()
+    this.setState(
+      ()=>{
+        return {
+          items: newItems
+        }
+      },
+      ()=>{
+        stop()
+        printInclusive()
+        printWasted()
+      }
+    )
+  }
+
+
+
+  render() {
+    return (
+      <Row>
+        <button
+          onClick={this.updateList}
+        >
+          UpdateList
+        </button>
+        <NoKey>
+          <H4>no key</H4>
+          {this.state.items.map((item, index) => (
+            <Regular
+              item={item}
+              key={index}
+            />
+          ))}
+        </NoKey>
+        <Medium>
+          <H4>key, no optimization</H4>
+          {this.state.items.map(item => (
+            <Regular
+              item={item}
+              key={item.id}
+            />
+          ))}
+        </Medium>
+        <Faster>
+          <H4>key and optimization</H4>
+          {this.state.items.map(item => (
+            <Optimized
+              item={item}
+              key={item.id}
+            />
+          ))}
+        </Faster>
+      </Row>
+    )
+  }
+}
+
+
+class Optimized extends Component {
+
+
+  shouldComponentUpdate(nextProps, nextState) {
+    return nextProps.item.value !== this.props.item.value
+  }
+
+  render() {
+    let {id, value} = this.props.item
+    return (
+      <Item
+        value={value}
+      >
+        <Id>{id}</Id>
+        <Value>{value}</Value>
+      </Item>
+    )
+  }
+}
+
+class Regular extends Component {
+
+
+  render() {
+    let {id, value} = this.props.item
+    return (
+      <Item
+        value={value}
+      >
+        <Id>{id}</Id>
+        <Value>{value}</Value>
+      </Item>
+    )
+  }
+}
+
+
+
+// App = loggify(App)
+//
+// PollChild = loggify(PollChild)
 
 export default App
