@@ -9,8 +9,25 @@ class App extends Component {
     owner: "Carl"
   }
 
+  state = {
+    favoriteColor: "green"
+  }
+
+  constructor(props){
+    super(props)
+    this.state = {
+      favoriteColor: "blue",
+      owner: props.owner
+    }
+
+    // DON'T DO
+    //this.setState({thisIs:"wrong"})
+
+  }
+
   render() {
     console.log(this.props)
+    console.log(this.state)
     return (
       <div>
         <FancyH2>Hello</FancyH2>
