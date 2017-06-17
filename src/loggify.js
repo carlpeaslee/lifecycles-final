@@ -3,7 +3,11 @@ import styled from 'styled-components'
 
 function loggify(Wrapped){
 
-  const methodsToLog = ["componentWillMount", "componentDidMount", "componentWillUnmount"]
+  const methodsToLog = [
+    "componentWillMount",
+    "componentDidMount",
+    "componentWillUnmount"
+  ]
 
   let originals = {}
 
@@ -28,6 +32,15 @@ function loggify(Wrapped){
       }
 
     }
+
+    Wrapped.prototype.setState = function (partialState, callback) {
+      console.groupCollapsed(`${Wrapped.displayName} setState`)
+      console.log('partialState', partialState)
+      console.log('callback', callback)
+      console.groupEnd()
+      this.updater.enqueueSetState(this, partialState, callback, 'setState')
+    }
+
   })
 
   return class extends Component {
