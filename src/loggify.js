@@ -3,7 +3,7 @@ import styled from 'styled-components'
 
 function loggify(Wrapped){
 
-  const methodsToLog = ["componentWillMount", "componentDidMount"]
+  const methodsToLog = ["componentWillMount", "componentDidMount", "componentWillUnmount"]
 
   let originals = {}
 
