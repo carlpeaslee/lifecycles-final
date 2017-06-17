@@ -29,8 +29,9 @@ export const logLifecycles = (Wrapped) => {
         oldFunction = oldFunction.bind(this)
         oldFunction(...arguments)
       }
-      if (method === 'shouldComponentUpdate' && typeof oldFunction === 'undefined') {
-        return true
+      if (method === "shouldComponentUpdate") {
+        console.log("shouldResult", oldFunction(...arguments))
+        return oldFunction(...arguments)
       }
     }
   })
