@@ -24,8 +24,16 @@ class App extends Component {
   }
 
 
+  componentWillMount(){
+
+  }
+
   componentDidMount(){
     this.fetchData()
+    const canvasCtx = this.refs.appCanvas.getContext('2d')
+    canvasCtx.fillStyle = "blue"
+    canvasCtx.arc(75, 75, 50, 0, 2 * Math.PI)
+    canvasCtx.fill()
   }
 
   render() {
@@ -33,6 +41,11 @@ class App extends Component {
       <div>
         <h2>hello</h2>
         <h4>data: {this.state.data}</h4>
+        <canvas
+          ref="appCanvas"
+          height={200}
+          width={200}
+        />
       </div>
     )
   }
