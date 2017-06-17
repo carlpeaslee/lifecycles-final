@@ -23,7 +23,20 @@ class App extends Component {
     // DON'T DO
     //this.setState({thisIs:"wrong"})
 
+    this.oneFunction = this.oneFunction.bind(this)
+
   }
+
+
+  oneFunction(){
+    console.log("oneFunction")
+    console.log(this.props)
+  }
+
+  useArrows = () => {
+    console.log("useArrows works without binding")
+  }
+
 
   render() {
     console.log(this.props)
@@ -31,6 +44,16 @@ class App extends Component {
     return (
       <div>
         <FancyH2>Hello</FancyH2>
+        <button
+          onClick={this.oneFunction}
+        >
+          test this
+        </button>
+        <button
+          onClick={this.useArrows}
+        >
+          arrows are nice!
+        </button>
       </div>
     )
   }
